@@ -1,10 +1,13 @@
 ﻿using ApiStore.Domain.StoreContext.ValueObjects;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ApiStore.Domain.StoreContext.Entities
 {
     public class Customer
     {
+
+        private readonly IList<Address> _addresses;
 
         public Customer(Name name, Document document, Email email, string phone)
         {
@@ -12,7 +15,7 @@ namespace ApiStore.Domain.StoreContext.Entities
             Document = document;
             Email = email;
             Phone = phone;
-            Addresses = new List<Address>();
+            _addresses = new List<Address>();
         }
 
         public Name Name { get; private set; }
@@ -23,7 +26,14 @@ namespace ApiStore.Domain.StoreContext.Entities
 
         public string Phone { get; private set; }
 
-        public IReadOnlyCollection<Address> Addresses { get; private set; }
+        public IReadOnlyCollection<Address> Addresses => _addresses.ToArray();
+
+        public void AddAddress(Address address)
+        {
+            //validar endereço
+            //Adicionar
+            _addresses.Add(address);
+        }
 
         public override string ToString()
         {
