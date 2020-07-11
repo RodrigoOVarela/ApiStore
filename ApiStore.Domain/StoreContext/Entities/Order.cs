@@ -58,6 +58,7 @@ namespace ApiStore.Domain.StoreContext.Entities
         {
             //a cada 5 produtos é uma entrega
             var deliveries = new List<Delivery>();
+            deliveries.Add(new Delivery(DateTime.Now.AddDays(5)));
             var count = 1;
             foreach (var item in _items)
             {

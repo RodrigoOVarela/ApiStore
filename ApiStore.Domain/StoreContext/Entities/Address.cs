@@ -38,5 +38,6 @@ namespace ApiStore.Domain.StoreContext.Entities
         public override string ToString()
         {
             return $"{Street}, {Number} - {City}/{State}";
+        }
     }
 }
