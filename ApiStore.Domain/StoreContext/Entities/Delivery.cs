@@ -18,5 +18,17 @@ namespace ApiStore.Domain.StoreContext.Entities
         public DateTime EstimatedDeliveryDate { get; private set; }
 
         public EDeliveryStatus Status { get; private set; }
+
+        public void Ship()
+        {
+            //se data no passado não entrega
+            Status = EDeliveryStatus.Shipped;
+        }
+
+        public void Cancel()
+        {
+            //se stats entregue não pode cancelar
+            Status = EDeliveryStatus.Canceled;
+        }
     }
 }

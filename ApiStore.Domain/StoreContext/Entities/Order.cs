@@ -14,7 +14,6 @@ namespace ApiStore.Domain.StoreContext.Entities
         public Order(Customer customer)
         {
             Customer = customer;
-            Number = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
             CreateDate = DateTime.Now;
             Status = EOrderStatus.Created;
             _items = new List<OrderItem>();
@@ -32,11 +31,6 @@ namespace ApiStore.Domain.StoreContext.Entities
 
         public IReadOnlyCollection<Delivery> Deliveries => _deliveries.ToArray();
 
-        public void Place()
-        {
-
-        }
-
         public void AddItem(OrderItem item)
         {
             //valida item
@@ -44,9 +38,51 @@ namespace ApiStore.Domain.StoreContext.Entities
             _items.Add(item);
         }
 
-        public void AddDelivery(Delivery delivery)
+        public void Place()
         {
-            _deliveries.Add(delivery);
+            //gerar número do pedido
+            Number = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8).ToUpper();
+
+
         }
+
+        public void Pay()
+        {
+            Status = EOrderStatus.Paid;
+
+
+
+        }
+
+        public void Ship()
+        {
+            //a cada 5 produtos é uma entrega
+            var deliveries = new List<Delivery>();
+            var count = 1;
+            foreach (var item in _items)
+            {
+                if (count == 5)
+                {
+                    count = 1;
+                    deliveries.Add(new Delivery(DateTime.Now.AddDays(5)));
+                }
+                count++;
+            }
+
+            //envia todas as entregas
+            deliveries.ForEach(x => x.Ship());
+
+            //adiciona as entregas aos pedidos
+            deliveries.ForEach(x =>_deliveries.Add(x));
+
+        }
+
+        public void Cancel()
+        {
+            Status = EOrderStatus.Canceled;
+            _deliveries.ToList().ForEach(x => x.Cancel());
+        }
+
+
     }
 }
